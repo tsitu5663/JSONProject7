@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Public Art</title>
+  <style>
+	.card{
+		width:60%;
+		text-align: center;
+		padding:50px;
+		margin:50px;
+		display:inline-block;
+		border-radius:10px;
+		box-shadow:black 5px 5px 5px;
+	}
+	h1{
+	    text-align: center;
+		margin: auto;
+		font-family:"Georgia";
+		text-shadow:gray 2px 2px 2px;
+		background-color:SlateBlue ;
+		color:white;
+		font-weight:bold;
+		padding:5px;
+		box-shadow:black 3px 3px 3px;
+	}
+	h2{
+		font-family:"Times New Roman";
+		text-shadow:gray 2px 2px 2px;
+		background-color:SlateBlue;
+		text-decoration:none;
+		color:white;
+		font-weight:bold;
+		padding:5px;
+		border-radius:10px;
+		box-shadow:black 3px 3px 3px;
+	}
+	p,a{
+		font-size:14pt;
+		font-family:"Comic Sans MS";
+		color: white;
+	}
+	#head1{
+		font-size:30pt;
+		font-family:"Times New Roman";
+		color:white;
+	}
+	
+</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+  <style>
+  body {
+      position: relative; 
+  }
+  #section1 {padding-top:50px;height:250px;color: #fff; background-color: #000000;}
+  #section2 {padding-top:50px;height:280px;color: #fff; background-color: #3CB371;}
+  
+  </style>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Monuments</a>
+    </div>
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#section1">Home</a></li>
+          <li><a href="#section2">All</a></li>
+          
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>   
+ 
+<script type= "text/template" id="mTemplate">
+	<div id="section2" class="container-fluid">
+		<h2>{{name}}</h2>
+		<p>{{borough}}</p>
+		<p> Description: {{ descrip }} </p>
+		<p> {{ location }} </p>
+		<p> Given By: {{ donor }} </p>
+		<p> Made By: {{ sculptor }} </p>
+	</div>
+</script>	
+	
+	
+<div id="section1" class="container-fluid">
+  <h1 id = "head1">Welcome to Public Monuments</h1>
+  <p>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+  <p id = "para1">Just some data on public monuments...</p>
+  
+</div>
+
+
+
+</body>
+<script>
+	var data;
+	function loadJSON(){				
+		$.getJSON("https://data.cityofnewyork.us/resource/g77k-nifh.json", function(results){
+			data = results;
+			})
+		}
+		
+
+
+
+	function search(){
+		var build = "";
+		 
+		var borough = document.getElementById("borough");
+
+		var output = document.getElementById("output");
+		var cardTemplate = document.getElementById("mTemplate").innerHTML;
+	
+		
+		for(var index = 0; index < data.length; index++){
+		    try { 
+				//if(borough == "") throw "---";
+				if (data[index].borough.toUpperCase().indexOf(borough.value.toUpperCase()) != -1
+				){
+					build += Mustache.render(cardTemplate, data[index]);
+				 }
+		    }
+			catch(err) {
+				console.log("Error: " + err + ".");
+			}
+		}
+		output.innerHTML = build;	
+	
+	
+	}
+	
+	
+	</script>
+	
+<body onload="loadJSON()">
+	<input type="text" id="borough" placeholder="Enter Borough">
+	<button onclick="search()"> Search </button>
+	<div id="output">
+	</div>
+
+</body>
+</html>
